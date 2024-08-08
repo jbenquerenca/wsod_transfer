@@ -151,6 +151,26 @@ class DatasetCatalog(object):
             "mode": "mask",
             "mini": 10,
         },
+        "caltech_pedestrians_train": {
+            "dir": "Caltech_Pedestrians",
+            "split": "train",
+        },
+        "caltech_pedestrians_val": {
+            "dir": "Caltech_Pedestrians",
+            "split": "val",
+        },
+        "caltech_pedestrians_test": {
+            "dir": "Caltech_Pedestrians",
+            "split": "test",
+        },
+        "eurocity_train": {
+            "dir": "EuroCity",
+            "split": "train",
+        },
+        "eurocity_val": {
+            "dir": "EuroCity",
+            "split": "val",
+        },
     }
 
     @staticmethod
@@ -200,6 +220,11 @@ class DatasetCatalog(object):
             attrs["img_dir"] = os.path.join(data_dir, attrs["img_dir"])
             attrs["ann_dir"] = os.path.join(data_dir, attrs["ann_dir"])
             return dict(factory="CityScapesDataset", args=attrs)
+        elif "caltech_pedestrians" in name or "eurocity" in name:
+            data_dir = DatasetCatalog.DATA_DIR
+            attrs = DatasetCatalog.DATASETS[name]
+            return dict(factory="PedestrianDataset", args=dict(data_dir=os.path.join(data_dir, attrs["dir"]), split=attrs["split"]))
+
         raise RuntimeError("Dataset not available: {}".format(name))
 
 

@@ -2,6 +2,7 @@ from maskrcnn_benchmark.data import datasets
 
 from .coco import coco_evaluation
 from .voc import voc_evaluation
+from .pedestrian import pedestrian_evaluation
 try:
     from .cityscapes import abs_cityscapes_evaluation
 except:
@@ -27,6 +28,8 @@ def evaluate(dataset, predictions, output_folder, **kwargs):
         return voc_evaluation(**args)
     elif isinstance(dataset, datasets.AbstractDataset):
         return abs_cityscapes_evaluation(**args)
+    elif isinstance(dataset, datasets.PedestrianDataset):
+        return pedestrian_evaluation(**args)
     else:
         dataset_name = dataset.__class__.__name__
         raise NotImplementedError("Unsupported dataset type {}.".format(dataset_name))
