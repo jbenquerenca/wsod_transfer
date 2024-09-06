@@ -11,7 +11,7 @@ MODEL:
   ROI_HEADS:
     SCORE_THRESH: 0.01
 DATASETS:
-  TRAIN: ("eurocity_train","eurocity_val")
+  TRAIN: ("eurocity_train", "eurocity_train",)
   TEST: ("caltech_pedestrians_val",)
 INPUT:
   IGNORE_CLS: True  # ignore class labels
@@ -25,4 +25,4 @@ SOLVER:
   MAX_ITER: 17500
   WEIGHT_DECAY: 0.0001
   CHECKPOINT_PERIOD: 100000
-  IMS_PER_BATCH: 2
+  IMS_PER_BATCH: 1

@@ -5,10 +5,9 @@ import torch, torch.utils.data, os, json
 
 class PedestrianDataset(torch.utils.data.Dataset):
 
-    def __init__(self, data_dir, split, transforms=None):
+    def __init__(self, data_dir, split, transforms=None, remove_images_without_annotations=True):
         self.root = data_dir
         self.image_set = split
-        self.transforms = transforms
         self._anno_path = os.path.join(self.root, "annotations", f"{self.image_set}.json")
         self._anno_file = json.load(open(self._anno_path))
         self._imgpath = os.path.join(self.root, "images")
@@ -18,8 +17,20 @@ class PedestrianDataset(torch.utils.data.Dataset):
         for img in self._anno_file["images"]: self.imgs[img["id"]] = img
         self.json_category_id_to_contiguous_id = {v: i + 1 for i, v in enumerate([cat["id"] for cat in self._anno_file["categories"]])}
         self.contiguous_category_id_to_json_id = {v: k for k, v in self.json_category_id_to_contiguous_id.items()}
+        # filter images without detection annotations
+        if remove_images_without_annotations:
+            ids = list()
+            for img_id in self.ids:
+                anns = self.imgToAnns[img_id]
+                if len(anns) == 0: continue
+                valid = False
+                for ann in anns:
+                    if ann["iscrowd"] == 0 and ann["ignore"] == 0: valid = True
+                if valid: ids.append(img_id)
+            self.ids = ids
         self.id_to_img_map = {k: v for k, v in enumerate(self.ids)}
         self._transforms = transforms
+        self.categories = {cat['id']: cat['name'] for cat in self._anno_file["categories"]}
 
     def __len__(self): return len(self.ids)
     
@@ -27,12 +38,17 @@ class PedestrianDataset(torch.utils.data.Dataset):
     
     def _load_image(self, file_name): return Image.open(os.path.join(self._imgpath, file_name)).convert("RGB")
 
-    def _load_target(self, annots): return [anno for anno in annots if (not anno["iscrowd"]) or ("ignore" in anno and not anno["ignore"])]
+    def _load_target(self, anns): 
+        targets = list()
+        for ann in anns:
+            if ann["iscrowd"] == 0 and ann["ignore"] == 0: targets.append(ann)
+        return targets
 
     def __getitem__(self, idx):
         img_id = self.ids[idx]
         img_file_name = self.imgs[img_id]["file_name"]
         img, anno = self._load_image(img_file_name), self._load_target(self.imgToAnns[img_id])
+        if len(anno) == 0: print(img); exit()
         boxes = [obj["bbox"] for obj in anno]
         boxes = torch.as_tensor(boxes).reshape(-1, 4)
         target = BoxList(boxes, img.size, mode="xywh").convert("xyxy")
