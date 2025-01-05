@@ -163,6 +163,18 @@ class DatasetCatalog(object):
             "dir": "Caltech_Pedestrians",
             "split": "test",
         },
+        "tju_train": {
+            "dir": "TJU",
+            "split": "train",
+        },
+        "tju_val": {
+            "dir": "TJU",
+            "split": "val",
+        },
+        "tju_test": {
+            "dir": "TJU",
+            "split": "test",
+        },
         "eurocity_train": {
             "dir": "EuroCity",
             "split": "train",
@@ -220,7 +232,7 @@ class DatasetCatalog(object):
             attrs["img_dir"] = os.path.join(data_dir, attrs["img_dir"])
             attrs["ann_dir"] = os.path.join(data_dir, attrs["ann_dir"])
             return dict(factory="CityScapesDataset", args=attrs)
-        elif "caltech_pedestrians" in name or "eurocity" in name:
+        elif "caltech_pedestrians" in name or "eurocity" in name or "tju" in name:
             data_dir = DatasetCatalog.DATA_DIR
             attrs = DatasetCatalog.DATASETS[name]
             return dict(factory="PedestrianDataset", args=dict(data_dir=os.path.join(data_dir, attrs["dir"]), split=attrs["split"]))

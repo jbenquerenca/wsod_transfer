@@ -1,4 +1,4 @@
-OUTPUT_DIR: "output/coco60_to_voc/ocud_it0"
+OUTPUT_DIR: "output/eurocity_to_tju/ocud_it0"
 MODEL:
   META_ARCHITECTURE: "GeneralizedRCNN"
   WEIGHT: "catalog://ImageNetPretrained/MSRA/R-50"
@@ -12,7 +12,7 @@ MODEL:
     SCORE_THRESH: 0.01
 DATASETS:
   TRAIN: ("eurocity_train", "eurocity_train",)
-  TEST: ("caltech_pedestrians_val",)
+  TEST: ("tju_val",)
 INPUT:
   IGNORE_CLS: True  # ignore class labels
   MIN_SIZE_TRAIN: (640,)
@@ -20,9 +20,10 @@ INPUT:
   MIN_SIZE_TEST: 640
   MAX_SIZE_TEST: 1066
 SOLVER:
-  BASE_LR: 0.008
-  STEPS: (12000,)
-  MAX_ITER: 17500
+  BASE_LR: 0.002
+  STEPS: (36000,)
+  MAX_ITER: 24685
   WEIGHT_DECAY: 0.0001
-  CHECKPOINT_PERIOD: 100000
-  IMS_PER_BATCH: 2
+  CHECKPOINT_PERIOD: 1000
+  IMS_PER_BATCH: 16
+  TEST_PERIOD: 1000
