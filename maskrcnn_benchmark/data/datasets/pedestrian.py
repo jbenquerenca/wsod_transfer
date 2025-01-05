@@ -18,7 +18,7 @@ class PedestrianDataset(torch.utils.data.Dataset):
         self.json_category_id_to_contiguous_id = {v: i + 1 for i, v in enumerate([cat["id"] for cat in self._anno_file["categories"]])}
         self.contiguous_category_id_to_json_id = {v: k for k, v in self.json_category_id_to_contiguous_id.items()}
         # filter images without detection annotations (for training the frcnn only)
-        if remove_images_without_annotations:
+        if remove_images_without_annotations and "eurocity" in data_dir:
             ids = list()
             for img_id in self.ids:
                 anns = self.imgToAnns[img_id]
@@ -48,13 +48,15 @@ class PedestrianDataset(torch.utils.data.Dataset):
         img_id = self.ids[idx]
         img_file_name = self.imgs[img_id]["file_name"]
         img, anno = self._load_image(img_file_name), self._load_target(self.imgToAnns[img_id])
-        if len(anno) == 0: print(img); exit()
+        # if len(anno) == 0: print(img); exit()
         boxes = [obj["bbox"] for obj in anno]
         boxes = torch.as_tensor(boxes).reshape(-1, 4)
         target = BoxList(boxes, img.size, mode="xywh").convert("xyxy")
         classes = [obj["category_id"] for obj in anno]
-        classes = [self.json_category_id_to_contiguous_id[c] for c in classes]
-        classes = torch.tensor(classes)
+        if classes:
+            classes = [self.json_category_id_to_contiguous_id[c] for c in classes]
+            classes = torch.tensor(classes)
+        else: classes = torch.tensor([0])
         target.add_field("labels", classes)
         target = target.clip_to_image(remove_empty=False)
         if self._transforms is not None: img, target = self._transforms(img, target)

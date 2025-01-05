@@ -114,6 +114,7 @@ def main():
             expected_results_sigma_tol=cfg.TEST.EXPECTED_RESULTS_SIGMA_TOL,
             output_folder=output_folder,
             ignore_cls=ignore_cls,
+            iter=int(ckpt.split("model_")[1].split(".")[0])
         )
         synchronize()
 

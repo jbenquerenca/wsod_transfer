@@ -72,6 +72,7 @@ def inference(
         expected_results_sigma_tol=4,
         output_folder=None,
         ignore_cls=None,
+        iter=None
 ):
     # convert to a torch.device for efficiency
     device = torch.device(device)
@@ -80,7 +81,8 @@ def inference(
     dataset = data_loader.dataset
     logger.info("Start evaluation on {} dataset({} images).".format(dataset_name, len(dataset)))
 
-    predictions_path = os.path.join(output_folder, "predictions.pth")
+    # include iteration so that during training the previous predictions are not picked up
+    predictions_path = os.path.join(output_folder, f"predictions_{iter}.pth") 
     if os.path.exists(predictions_path):
         if not is_main_process():
             return
