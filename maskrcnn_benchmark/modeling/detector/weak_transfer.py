@@ -326,7 +326,11 @@ class ROIBoxHead(torch.nn.Module):
         img_labels = torch.stack([t.get_field("img_labels") for t in targets])
         # another (probably better) way to avoid numerical instability is to do
         # torch's logsumexp or logsoftmax, then do binary_cross_entropy_with_logits.
-        loss_cls = F.binary_cross_entropy(img_cls_prob.clamp(1e-10, 1-1e-10), img_labels)
+        try:
+            loss_cls = F.binary_cross_entropy(img_cls_prob.clamp(1e-10, 1-1e-10), img_labels)
+        except:
+            print(f"{img_cls_prob=} {img_cls_prob.clamp(1e-10, 1-1e-10)=} {img_labels=}")
+            exit()
 
         det_reduce = det_prob.max(1)[0]
         orgscores = torch.cat(list_orgscores)

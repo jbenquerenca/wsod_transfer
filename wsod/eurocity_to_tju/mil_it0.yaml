@@ -27,15 +27,16 @@ DATASETS:
   TRAIN: ("tju_train",)
   TEST: ("tju_val",)
 SOLVER:
-  BASE_LR: 0.008
+  BASE_LR: 0.002
   WEIGHT_DECAY: 0.0001
   # set as 3500,5000 to be consistent with paper. roughly 8 epochs, lr decay at 6th epoch
-  STEPS: (3500,) # (3340,)
-  MAX_ITER: 5000 # 5011
-  IMS_PER_BATCH: 8
-  CHECKPOINT_PERIOD: 100000
+  STEPS: (14000,) # (3340,)
+  MAX_ITER: 20000 # 5011
+  IMS_PER_BATCH: 16 
+  CHECKPOINT_PERIOD: 1000 
+  TEST_PERIOD: 1000
 TEST:
-  IMS_PER_BATCH: 8
+  IMS_PER_BATCH: 16 
   BBOX_AUG:
     ENABLED: True
     H_FLIP: True
