@@ -1,4 +1,6 @@
 from PIL import Image
+from PIL import ImageFile
+ImageFile.LOAD_TRUNCATED_IMAGES = True # fix for tju
 from collections import defaultdict
 from maskrcnn_benchmark.structures.bounding_box import BoxList
 import torch, torch.utils.data, os, json

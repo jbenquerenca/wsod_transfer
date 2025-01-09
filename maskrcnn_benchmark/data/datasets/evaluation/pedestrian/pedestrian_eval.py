@@ -33,6 +33,7 @@ def prepare_coco_results(predictions, dataset):
         boxes = prediction.bbox.tolist()
         scores = prediction.get_field("scores").tolist()
         labels = prediction.get_field("labels").tolist()
-        mapped_labels = [dataset.contiguous_category_id_to_json_id[i] for i in labels]
+        # TODO: Hacky way to solve this problem where I consider all predictions from the model as 1
+        mapped_labels = [1 for i in labels] # [dataset.contiguous_category_id_to_json_id[i] for i in labels]
         coco_results.extend([{"image_id": original_id, "category_id": mapped_labels[k], "bbox": box, "score": scores[k]} for k, box in enumerate(boxes)])
     return coco_results
