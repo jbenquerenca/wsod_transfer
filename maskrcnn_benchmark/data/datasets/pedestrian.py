@@ -20,7 +20,7 @@ class PedestrianDataset(torch.utils.data.Dataset):
         self.json_category_id_to_contiguous_id = {v: i + 1 for i, v in enumerate([cat["id"] for cat in self._anno_file["categories"]])}
         self.contiguous_category_id_to_json_id = {v: k for k, v in self.json_category_id_to_contiguous_id.items()}
         # filter images without detection annotations (for training the frcnn only)
-        if remove_images_without_annotations and "EuroCity" in data_dir:
+        if remove_images_without_annotations and ("EuroCity" in data_dir or "it" in split):
             ids = list()
             for img_id in self.ids:
                 anns = self.imgToAnns[img_id]
@@ -45,14 +45,22 @@ class PedestrianDataset(torch.utils.data.Dataset):
         for ann in anns:
             if ann["iscrowd"] == 0 and ann["ignore"] == 0: targets.append(ann)
         return targets
+    
+    def get_groundtruth(self, idx):
+        anno = self._load_target(self.imgToAnns[self.ids[idx]])
+        im_info = self.get_img_info(idx)
+        target = BoxList(torch.as_tensor([obj["bbox"] for obj in anno]).reshape(-1, 4), 
+                        (im_info["width"], im_info["height"]), mode="xywh").convert("xyxy")
+        target.add_field("labels", torch.tensor([self.json_category_id_to_contiguous_id[obj["category_id"]] for obj in anno], dtype=torch.int64))
+        return target
+
 
     def __getitem__(self, idx):
         img_id = self.ids[idx]
         img_file_name = self.imgs[img_id]["file_name"]
         img, anno = self._load_image(img_file_name), self._load_target(self.imgToAnns[img_id])
         # if len(anno) == 0: print(img); exit()
-        boxes = [obj["bbox"] for obj in anno]
-        boxes = torch.as_tensor(boxes).reshape(-1, 4)
+        boxes = torch.as_tensor([obj["bbox"] for obj in anno]).reshape(-1, 4)
         target = BoxList(boxes, img.size, mode="xywh").convert("xyxy")
         classes = [obj["category_id"] for obj in anno]
         if classes:

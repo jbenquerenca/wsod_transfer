@@ -183,6 +183,18 @@ class DatasetCatalog(object):
             "dir": "EuroCity",
             "split": "val",
         },
+        "tju_train_it0": {
+            "dir": "TJU",
+            "split": "tju_train_eurocity-to-tju_it0_0.8",
+        },
+        "eurocity_train_it0": {
+            "dir": "EuroCity",
+            "split": "eurocity_train_eurocity-to-tju_it0_0.8",
+        },
+        "eurocity_val_it0": {
+            "dir": "EuroCity",
+            "split": "eurocity_val_eurocity-to-tju_it0_0.8",
+        },
     }
 
     @staticmethod

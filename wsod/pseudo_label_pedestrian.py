@@ -1,17 +1,16 @@
 from tqdm import tqdm
-import os, sys
-import json
-import torch, numpy as np
+import os, sys, json, torch, numpy as np
 from maskrcnn_benchmark.data.build import build_dataset
 from maskrcnn_benchmark.utils.imports import import_file
 from maskrcnn_benchmark.config import cfg
+from maskrcnn_benchmark.structures.bounding_box import BoxList
 paths_catalog = import_file(
     "maskrcnn_benchmark.config.paths_catalog", cfg.PATHS_CATALOG, True
 )
 DatasetCatalog = paths_catalog.DatasetCatalog
 
-target_dataset = "tju" # "caltech_pedestrians"
-target_folder = "TJU" if target_dataset=="tju" else "Caltech_Pedestrians"
+target_dataset = "tju_train" # "caltech_pedestrians"
+target_folder = "TJU" if target_dataset=="tju_train" else "Caltech_Pedestrians"
 
 local_rank = int(os.environ.get('OMPI_COMM_WORLD_LOCAL_RANK', '0'))
 if local_rank != 0:
@@ -26,11 +25,11 @@ print('pseudo label params:', folder, eurocity_train, eurocity_val, tag, it, th)
 # output label file names
 json_target = '%s_%s_it%s_%s.json' % (target_dataset, tag, it, th)
 
-path = folder + f'/inference/{target_dataset}/predictions.pth'
+path = folder + f'/inference/{target_dataset}/predictions_final.pth'
 print ("read", path)
 d_train = torch.load(path)
 
-dataset_list = (f"{target_dataset}_train",)
+dataset_list = (f"{target_dataset}",)
 transforms = None
 datasets = build_dataset(dataset_list, transforms, DatasetCatalog, False)
 
@@ -39,7 +38,7 @@ gt_train = [datasets[0].get_groundtruth(idx) for idx in range(len(datasets[0]))]
 p_train = {}
 p_train.update(zip(datasets[0].ids, zip(gt_train, d_train)))
 
-with open(f'datasets/{target_folder}/train.json','r') as f:
+with open(f'datasets/{target_folder}/annotations/train.json','r') as f:
     d = json.load(f)
 
 th = float(th)
@@ -77,11 +76,11 @@ with open(fn,'w') as f:
 ###############################################################################
 # EuroCity (train, val) pseudo labeling
 
-path = folder + '/inference/' + eurocity_train + '/predictions.pth'
+path = folder + '/inference/' + eurocity_train + '/predictions_final.pth'
 print ("read", path)
 d_train = torch.load(path)
 
-path = folder + '/inference/' + eurocity_val + '/predictions.pth'
+path = folder + '/inference/' + eurocity_val + '/predictions_final.pth'
 print ("read", path)
 d_val = torch.load(path)
 
@@ -207,9 +206,9 @@ def mine_boxes(p_trainval, ov_th, score_th, mined_class_label=1, visualize=False
     print ('mined_images', mined_images, 'mined_boxes', mined_boxes)
     return annos
 
-with open('datasets/EuroCity/annotations/%s.json' % eurocity_train,'r') as f:
+with open('datasets/EuroCity/annotations/train.json','r') as f:
     d1 = json.load(f)
-with open('datasets/EuroCity/annotations/%s.json' % eurocity_val,'r') as f:
+with open('datasets/EuroCity/annotations/val.json','r') as f:
     d2 = json.load(f)
 
 # d = d2.copy()

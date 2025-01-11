@@ -25,7 +25,7 @@ INPUT:
   MAX_SIZE_TEST: 1066
 DATASETS:
   TRAIN: ("tju_train",)
-  TEST: ("tju_val",)
+  TEST: ("tju_train","eurocity_train","eurocity_val",) # ("tju_val",)
 SOLVER:
   BASE_LR: 0.002
   WEIGHT_DECAY: 0.0001

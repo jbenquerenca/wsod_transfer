@@ -1,7 +1,7 @@
-OUTPUT_DIR: "output/coco60_to_voc/ocud_it1"
+OUTPUT_DIR: "output/eurocity_to_tju/ocud_it1"
 MODEL:
   META_ARCHITECTURE: "GeneralizedRCNN"
-  WEIGHT: "output/coco60_to_voc/ocud_it0/model_final.pth"
+  WEIGHT: "output/eurocity_to_tju/ocud_it0/model_0024000.pth"
   RPN:
     PRE_NMS_TOP_N_TEST: 6000
     POST_NMS_TOP_N_TEST: 300
@@ -11,8 +11,8 @@ MODEL:
   ROI_HEADS:
     SCORE_THRESH: 0.01
 DATASETS:
-  TRAIN: ("coco60_train2017_coco60-to-voc_it0_0.8","coco60_val2017_coco60-to-voc_it0_0.8","voc_2007_trainval_coco60-to-voc_it0_0.8_cocostyle")
-  TEST: ("voc_2007_test",)
+  TRAIN: ("tju_train_it0","eurocity_train_it0","eurocity_val_it0",)
+  TEST: ("tju_val",)
 INPUT:
   IGNORE_CLS: True
   MIN_SIZE_TRAIN: (640,)
@@ -20,9 +20,10 @@ INPUT:
   MIN_SIZE_TEST: 640
   MAX_SIZE_TEST: 1066
 SOLVER:
-  BASE_LR: 0.008
-  STEPS: (3500,)
-  MAX_ITER: 5000
+  BASE_LR: 0.002
+  STEPS: (12342,)
+  MAX_ITER: 18000
   WEIGHT_DECAY: 0.0001
-  CHECKPOINT_PERIOD: 100000
-  IMS_PER_BATCH: 8
+  CHECKPOINT_PERIOD: 1000
+  IMS_PER_BATCH: 16
+  TEST_PERIOD: 1000
