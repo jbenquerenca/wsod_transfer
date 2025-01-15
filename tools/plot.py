@@ -2,17 +2,47 @@
 import os, matplotlib.pyplot as plt, numpy as np, sys
 if len(sys.argv) == 1: print("You forgot the log path!"); exit()
 with open(sys.argv[1]) as f: 
+    best_models = {m:None for m in ["reasonable", "reasonable_small", "heavy", "all"]}
+    best_mr = {m:100 for m in ["reasonable", "reasonable_small", "heavy", "all"]}
     results = {m:list() for m in ["models", "reasonable", "reasonable_small", "heavy", "all"]}
     lines = f.read().splitlines()
     for i, l in enumerate(lines):
         if "Reasonable" in l:
-            sl = l.split()
-            results["models"].append(lines[i+1].split()[8])
-            results["reasonable"].append(float(sl[5].split("%")[0])/100)
-            results["reasonable_small"].append(float(sl[7].split("%")[0])/100)
-            results["heavy"].append(float(sl[9].split("%")[0])/100)
-            results["all"].append(float(sl[11].split("%")[0])/100)
+            try:
+                sl = l.split()
+
+                model = lines[i+1].split()[8]
+                reasonable = float(sl[5].split("%")[0])/100
+                reasonable_small = float(sl[7].split("%")[0])/100
+                heavy = float(sl[9].split("%")[0])/100
+                _all = float(sl[11].split("%")[0])/100
+
+                if reasonable < best_mr["reasonable"]:
+                    best_mr["reasonable"] = reasonable
+                    best_models["reasonable"] = model
+
+                if reasonable_small < best_mr["reasonable_small"]:
+                    best_mr["reasonable_small"] = reasonable_small
+                    best_models["reasonable_small"] = model
+                
+                if heavy < best_mr["heavy"]:
+                    best_mr["heavy"] = heavy
+                    best_models["heavy"] = model
+
+                if _all < best_mr["all"]:
+                    best_mr["all"] = _all
+                    best_models["all"] = model
+
+                results["models"].append(model)
+                results["reasonable"].append(reasonable)
+                results["reasonable_small"].append(reasonable_small)
+                results["heavy"].append(heavy)
+                results["all"].append(_all)
+
+            except: continue
+            
 print(results)
+for m, bmr in best_mr.items(): print(f"{m}\n Model {best_models[m]}: {bmr}")
 fig, ((ax1, ax2), (ax3, ax4)) = plt.subplots(2, 2, figsize=(12, 8))
 x_axis, y_axis = "iter", "mr"
 # Plot for reasonable
