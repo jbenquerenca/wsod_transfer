@@ -9,7 +9,7 @@ paths_catalog = import_file(
 )
 DatasetCatalog = paths_catalog.DatasetCatalog
 
-target_dataset = "tju_train" # "caltech_pedestrians"
+target_dataset =  "caltech_pedestrians_train"#"tju_train" 
 target_folder = "TJU" if target_dataset=="tju_train" else "Caltech_Pedestrians"
 
 local_rank = int(os.environ.get('OMPI_COMM_WORLD_LOCAL_RANK', '0'))
@@ -25,7 +25,7 @@ print('pseudo label params:', folder, eurocity_train, eurocity_val, tag, it, th)
 # output label file names
 json_target = '%s_%s_it%s_%s.json' % (target_dataset, tag, it, th)
 
-path = folder + f'/inference/{target_dataset}/predictions_final.pth'
+path = folder + f'/inference/{target_dataset}/predictions_0003000.pth'
 print ("read", path)
 d_train = torch.load(path)
 
@@ -76,11 +76,11 @@ with open(fn,'w') as f:
 ###############################################################################
 # EuroCity (train, val) pseudo labeling
 
-path = folder + '/inference/' + eurocity_train + '/predictions_final.pth'
+path = folder + '/inference/' + eurocity_train + '/predictions_0003000.pth'
 print ("read", path)
 d_train = torch.load(path)
 
-path = folder + '/inference/' + eurocity_val + '/predictions_final.pth'
+path = folder + '/inference/' + eurocity_val + '/predictions_0003000.pth'
 print ("read", path)
 d_val = torch.load(path)
 

@@ -195,6 +195,18 @@ class DatasetCatalog(object):
             "dir": "EuroCity",
             "split": "eurocity_val_eurocity-to-tju_it0_0.8",
         },
+        "eurocity_train_eurocity-to-caltech_pedestrian_it0_0.8": {
+            "dir": "EuroCity",
+            "split": "eurocity_train_eurocity-to-caltech_pedestrian_it0_0.8",
+        },
+        "eurocity_val_eurocity-to-caltech_pedestrian_it0_0.8": {
+            "dir": "EuroCity",
+            "split": "eurocity_val_eurocity-to-caltech_pedestrian_it0_0.8",
+        },
+        "caltech_pedestrians_train_eurocity-to-caltech_pedestrian_it0_0.8": {
+            "dir": "Caltech_Pedestrians",
+            "split": "caltech_pedestrians_train_eurocity-to-caltech_pedestrian_it0_0.8",
+        }
     }
 
     @staticmethod

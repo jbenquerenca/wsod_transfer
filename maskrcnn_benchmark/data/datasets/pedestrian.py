@@ -20,7 +20,7 @@ class PedestrianDataset(torch.utils.data.Dataset):
         self.json_category_id_to_contiguous_id = {v: i + 1 for i, v in enumerate([cat["id"] for cat in self._anno_file["categories"]])}
         self.contiguous_category_id_to_json_id = {v: k for k, v in self.json_category_id_to_contiguous_id.items()}
         # filter images without detection annotations (for training the frcnn only)
-        if remove_images_without_annotations and ("EuroCity" in data_dir or "it" in split or ("TJU" in data_dir and "val" in split)):
+        if remove_images_without_annotations and (("EuroCity" in data_dir) or ("it" in split) or ("TJU" in data_dir and "val" in split) or ("Caltech" in data_dir and "val" in split)):
             ids = list()
             for img_id in self.ids:
                 anns = self.imgToAnns[img_id]
