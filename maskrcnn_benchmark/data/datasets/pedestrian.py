@@ -43,7 +43,7 @@ class PedestrianDataset(torch.utils.data.Dataset):
     def _load_target(self, anns): 
         targets = list()
         for ann in anns:
-            if ann["iscrowd"] == 0 and ann["ignore"] == 0: targets.append(ann)
+            if ann["iscrowd"] == 0 and ("ignore" in ann and ann["ignore"] == 0): targets.append(ann)
         return targets
     
     def get_groundtruth(self, idx):

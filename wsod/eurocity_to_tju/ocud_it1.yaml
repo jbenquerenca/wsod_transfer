@@ -12,7 +12,7 @@ MODEL:
     SCORE_THRESH: 0.01
 DATASETS:
   TRAIN: ("tju_train_it0","eurocity_train_it0","eurocity_val_it0",)
-  TEST: ("tju_val",)
+  TEST: ("tju_test",)
 INPUT:
   IGNORE_CLS: True
   MIN_SIZE_TRAIN: (640,)

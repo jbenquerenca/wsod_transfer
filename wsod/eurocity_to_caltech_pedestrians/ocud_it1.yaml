@@ -12,7 +12,7 @@ MODEL:
     SCORE_THRESH: 0.01
 DATASETS:
   TRAIN: ("eurocity_train_eurocity-to-caltech_pedestrian_it0_0.8", "eurocity_val_eurocity-to-caltech_pedestrian_it0_0.8", "caltech_pedestrians_train_eurocity-to-caltech_pedestrian_it0_0.8",)
-  TEST: ("caltech_pedestrians_val",)
+  TEST: ("caltech_pedestrians_test",)
 INPUT:
   IGNORE_CLS: True
   MIN_SIZE_TRAIN: (640,)

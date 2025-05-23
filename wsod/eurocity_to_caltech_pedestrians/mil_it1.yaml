@@ -25,7 +25,7 @@ INPUT:
   MAX_SIZE_TEST: 1066
 DATASETS:
   TRAIN: ("caltech_pedestrians_train",)
-  TEST: ("caltech_pedestrians_val",)
+  TEST: ("caltech_pedestrians_test",)
 SOLVER:
   BASE_LR: 0.002
   WEIGHT_DECAY: 0.0001
@@ -36,7 +36,7 @@ SOLVER:
   CHECKPOINT_PERIOD: 1000
   TEST_PERIOD: 1000
 TEST:
-  IMS_PER_BATCH: 16 
+  IMS_PER_BATCH: 1 
   BBOX_AUG:
     ENABLED: False
     H_FLIP: True
